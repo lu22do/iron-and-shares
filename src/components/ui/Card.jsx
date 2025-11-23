@@ -1,0 +1,5 @@
+export const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
