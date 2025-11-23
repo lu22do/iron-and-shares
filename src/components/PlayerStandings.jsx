@@ -30,11 +30,10 @@ export const PlayerStandings = ({ players, portfolio, companies, currentTurnPlay
                 {p.name}
                 {p.id === currentTurnPlayerId && <Activity size={14} className="text-orange-500" />}
               </div>
-              <div className="text-xs text-slate-500">Cash: ${p.cash.toFixed(0)}</div>
             </div>
             <div className="text-right">
-              <div className="text-sm font-bold text-slate-900">${p.netWorth.toFixed(0)}</div>
-              <div className="text-xs text-slate-400">Net Worth</div>
+              <div className="text-xs text-slate-500">Cash: ${p.cash.toFixed(0)}</div>
+              <div className="text-xs text-slate-500">Net Worth: ${p.netWorth.toFixed(0)}</div>
             </div>
           </div>
         ))}

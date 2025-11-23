@@ -7,6 +7,7 @@ export const TurnIndicator = ({
   activeCompanyName, 
   currentPlayerName, 
   isStockRound,
+  actionInProgress,
   onPassTurn 
 }) => {
   return (
@@ -27,7 +28,7 @@ export const TurnIndicator = ({
         </div>
       </div>
       {isMyTurn && isStockRound && (
-        <Button variant="secondary" onClick={onPassTurn}>Pass Turn</Button>
+        <Button variant="secondary" onClick={onPassTurn} disabled={actionInProgress}>Pass Turn</Button>
       )}
     </Card>
   );

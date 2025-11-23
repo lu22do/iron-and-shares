@@ -2,7 +2,7 @@ import { ChevronsUp } from 'lucide-react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 
-export const CompanyCard = ({ company, isMyTurn, isStockRound, playerCash, onBuyShare }) => {
+export const CompanyCard = ({ company, isMyTurn, isStockRound, playerCash, actionInProgress, onBuyShare }) => {
   return (
     <Card className="relative">
       <div className={`${company.color} ${company.text} p-3 flex justify-between items-center`}>
@@ -33,7 +33,7 @@ export const CompanyCard = ({ company, isMyTurn, isStockRound, playerCash, onBuy
         {isMyTurn && isStockRound && (
           <Button 
             onClick={() => onBuyShare(company.id)}
-            disabled={company.sharesSold >= 10 || playerCash < company.price}
+            disabled={company.sharesSold >= 10 || playerCash < company.price || actionInProgress}
             className="w-full mt-2"
           >
             Buy Share (${company.price})

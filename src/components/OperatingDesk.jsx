@@ -2,7 +2,7 @@ import { Briefcase } from 'lucide-react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 
-export const OperatingDesk = ({ company, onUpgradeTrack, onFinishOperation }) => {
+export const OperatingDesk = ({ company, actionInProgress, onUpgradeTrack, onFinishOperation }) => {
   return (
     <Card className="border-2 border-orange-400 shadow-xl">
       <div className="bg-orange-100 p-3 border-b border-orange-200 flex items-center gap-2 text-orange-800 font-bold">
@@ -19,7 +19,7 @@ export const OperatingDesk = ({ company, onUpgradeTrack, onFinishOperation }) =>
             </div>
             <Button 
               onClick={onUpgradeTrack} 
-              disabled={company.treasury < (company.trackLevel + 1) * 20}
+              disabled={company.treasury < (company.trackLevel + 1) * 20 || actionInProgress}
               className="w-full"
             >
               Build Track
@@ -32,11 +32,11 @@ export const OperatingDesk = ({ company, onUpgradeTrack, onFinishOperation }) =>
           <div className="bg-slate-50 p-4 rounded border">
             <div className="text-sm text-slate-500 mb-2">Current Revenue: <span className="font-bold text-slate-900">${company.trackLevel * 30}</span></div>
             <div className="grid grid-cols-2 gap-3">
-              <Button onClick={() => onFinishOperation('WITHHOLD')} variant="secondary" className="text-sm">
+              <Button onClick={() => onFinishOperation('WITHHOLD')} variant="secondary" className="text-sm" disabled={actionInProgress}>
                 Withhold
               </Button>
-              <Button onClick={() => onFinishOperation('DIVIDEND')} variant="success" className="text-sm">
-                Pay Out
+              <Button onClick={() => onFinishOperation('DIVIDEND')} variant="success" className="text-sm" disabled={actionInProgress}>
+                Pay Out <br/>(${(company.trackLevel * 30) / 10} per share)
               </Button>
             </div>
           </div>

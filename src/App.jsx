@@ -13,6 +13,7 @@ export default function IronAndSharesApp() {
   const [gameId, setGameId] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [actionInProgress, setActionInProgress] = useState(false);
   
   const { gameState, error, setError } = useGameSync(user, gameId, loading);
 
@@ -59,7 +60,7 @@ export default function IronAndSharesApp() {
   };
 
   const buyShare = async (companyId) => {
-    if (!isMyTurn || gameState.phase !== 'STOCK') return;
+    if (!isMyTurn || gameState.phase !== 'STOCK' || actionInProgress) return;
 
     const company = gameState.companies[companyId];
     const player = gameState.players[user.uid];
@@ -67,40 +68,55 @@ export default function IronAndSharesApp() {
     if (player.cash < company.price) return alert("Not enough cash");
     if (company.sharesSold >= 10) return alert("All shares sold");
 
+    setActionInProgress(true);
     try {
       await gameService.buyShare(gameId, user, companyId, gameState);
     } catch (e) {
       console.error(e);
+    } finally {
+      setActionInProgress(false);
     }
   };
 
   const passTurn = async () => {
-    if (!isMyTurn) return;
+    if (!isMyTurn || actionInProgress) return;
+    setActionInProgress(true);
     try {
       await gameService.passTurn(gameId, user, gameState, getPresident);
     } catch (e) {
       console.error(e);
+    } finally {
+      setActionInProgress(false);
     }
   };
 
   const upgradeTrack = async () => {
+    if (actionInProgress) return;
+    setActionInProgress(true);
     try {
       await gameService.upgradeTrack(gameId, gameState);
     } catch (e) {
       console.error(e);
+    } finally {
+      setActionInProgress(false);
     }
   };
 
   const finishOperation = async (payout) => {
+    if (actionInProgress) return;
+    setActionInProgress(true);
     try {
       await gameService.finishOperation(gameId, gameState, payout, getPresident);
     } catch (e) {
       console.error(e);
+    } finally {
+      setActionInProgress(false);
     }
   };
 
   const logout = async () => {
-    await handleLogout();
+    // await handleLogout();
+    setGameState(null);
     setGameId("");
   };
 
@@ -146,6 +162,7 @@ export default function IronAndSharesApp() {
       isOperatingRound={isOperatingRound}
       isStockRound={isStockRound}
       activeCompany={activeCompany}
+      actionInProgress={actionInProgress}
       onLogout={logout}
       onPassTurn={passTurn}
       onBuyShare={buyShare}

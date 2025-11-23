@@ -113,7 +113,7 @@ export const WelcomePage = ({ user, playerName, setPlayerName, error, onCreateGa
           <div className="bg-slate-50 rounded border border-slate-200 min-h-[100px] max-h-[200px] overflow-auto">
             {availableGames.length === 0 ? (
               <div className="p-4 text-center text-slate-400 text-sm">
-                {refreshing ? "Searching..." : "No active lobbies found in this universe."}
+                {refreshing ? "Searching..." : "No game waiting for players found."}
               </div>
             ) : (
               <div className="divide-y divide-slate-200">

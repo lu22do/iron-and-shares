@@ -73,7 +73,7 @@ export const startGame = async (gameId) => {
   const gameRef = doc(db, 'artifacts', appId, 'public', 'data', 'games', gameId);
   await updateDoc(gameRef, {
     phase: 'STOCK',
-    logs: arrayUnion("Game Started! Stock Round 1.")
+    logs: arrayUnion("Game Started! Stock Trading Phase Round 1.")
   });
 };
 
@@ -125,7 +125,7 @@ export const passTurn = async (gameId, user, gameState, getPresident) => {
       operatingCompanyIdx: 0,
       turnPlayerId: getPresident(sortedCompanies[0], gameState.players, gameState.portfolio),
       passedPlayers: 0,
-      logs: arrayUnion("Stock Round ended. Operating Round begins.")
+      logs: arrayUnion("Stock Trading Phase ended. Company Operating Phase begins.")
     });
   } else {
     const nextPlayerIdx = (gameState.playerOrder.indexOf(user.uid) + 1) % gameState.playerOrder.length;
@@ -161,17 +161,18 @@ export const finishOperation = async (gameId, gameState, payout, getPresident) =
 
   if (payout === 'WITHHOLD') {
     updates[`companies.${companyId}.treasury`] = increment(revenue);
-    updates[`companies.${companyId}.price`] = increment(revenue > 0 ? -5 : 0);
-    if (company.price - 5 < 10) updates[`companies.${companyId}.price`] = 10;
-    logMsg = `${companyId} withheld $${revenue}. Stock drops.`;
+    const newPrice = Math.max(10, company.price - 5);
+    updates[`companies.${companyId}.price`] = newPrice;
+    logMsg = `${companyId} withheld $${revenue}. Stock drops to $${newPrice}.`;
   } else {
     const perShare = revenue / 10;
     Object.keys(gameState.players).forEach(pid => {
       const shares = gameState.portfolio[pid]?.[companyId] || 0;
       if (shares > 0) updates[`players.${pid}.cash`] = increment(shares * perShare);
     });
-    updates[`companies.${companyId}.price`] = increment(10);
-    logMsg = `${companyId} paid dividends ($${revenue}). Stock rises.`;
+    const newPrice = company.price + 10;
+    updates[`companies.${companyId}.price`] = newPrice;
+    logMsg = `${companyId} paid dividends ($${revenue}). Stock rises to $${newPrice}.`;
   }
 
   const nextIdx = gameState.operatingCompanyIdx + 1;

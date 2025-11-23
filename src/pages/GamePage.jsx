@@ -4,6 +4,7 @@ import { CompanyCard } from '../components/CompanyCard';
 import { OperatingDesk } from '../components/OperatingDesk';
 import { TransactionLog } from '../components/TransactionLog';
 import { PlayerInfo } from '../components/PlayerInfo';
+import { PlayerPortfolio } from '../components/PlayerPortfolio';
 import { PlayerStandings } from '../components/PlayerStandings';
 
 export const GamePage = ({ 
@@ -14,6 +15,7 @@ export const GamePage = ({
   isOperatingRound,
   isStockRound,
   activeCompany,
+  actionInProgress,
   onLogout,
   onPassTurn,
   onBuyShare,
@@ -40,17 +42,21 @@ export const GamePage = ({
             activeCompanyName={activeCompany?.name}
             currentPlayerName={gameState.players[gameState.turnPlayerId]?.name}
             isStockRound={isStockRound}
+            actionInProgress={actionInProgress}
             onPassTurn={onPassTurn}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.values(gameState.companies).map(company => (
+            {Object.values(gameState.companies)
+              .sort((a, b) => a.id.localeCompare(b.id))
+              .map(company => (
               <CompanyCard 
                 key={company.id}
                 company={company}
                 isMyTurn={isMyTurn}
                 isStockRound={isStockRound}
                 playerCash={currentPlayer.cash}
+                actionInProgress={actionInProgress}
                 onBuyShare={onBuyShare}
               />
             ))}
@@ -59,6 +65,7 @@ export const GamePage = ({
           {isMyTurn && isOperatingRound && activeCompany && (
             <OperatingDesk 
               company={activeCompany}
+              actionInProgress={actionInProgress}
               onUpgradeTrack={onUpgradeTrack}
               onFinishOperation={onFinishOperation}
             />
@@ -71,6 +78,11 @@ export const GamePage = ({
           <PlayerInfo 
             player={currentPlayer}
             portfolio={gameState.portfolio[user.uid]}
+          />
+
+          <PlayerPortfolio 
+            portfolio={gameState.portfolio[user.uid]}
+            companies={gameState.companies}
           />
 
           <PlayerStandings 
