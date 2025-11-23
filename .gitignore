@@ -12,9 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment variables & deployment files
 .env
 .env.local
+.firebase/*
 
 # Editor directories and files
 .vscode/*
