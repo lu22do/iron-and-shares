@@ -1,9 +1,3 @@
-# TODO
-
-* resell shares
-* increase share price when buying
-* end game
-
 # Overview
 
 This is a simple multiplayer strategy game based on the "1830: Railways and Robber Barons" board game (and the whole 18XX series). It is implemented a **Serverless Application** using **React** and **Firebase Firestore** (provides a real-time multiplayer database).
@@ -40,3 +34,28 @@ The game consists of rounds. Each round has 2 phases: stock trading phase & comp
     *   **Dividends:** Presidents choose to **Pay Out** (distributing revenue to shareholders and raising stock price) or **Withhold** (keeping revenue in the company treasury for future builds, but slightly lowering stock price).
         
 *   **Dynamic UI:** The interface updates in real-time. It highlights whose turn it is and only enables buttons for the active player.
+
+## Some mechanics in details 
+
+### Why is the company share price decreases when not paying dividends
+
+The core reason for a stock price drop when a company (railroad) withholds revenue is to introduce **market discipline** and force players to make difficult strategic choices.
+
+1.  **The "Withholding" Problem:** In 18xx games, a company president (the player with the most shares) controls the company's treasury. They can choose to keep the revenue (Withhold) or pay it out (Dividend). If there were no penalty for withholding, presidents could simply retain all company profits to:
+    
+    *   **Build a huge war chest** (the company treasury) to aggressively upgrade track and buy stations later.
+    *   **Keep the stock price artificially low** to buy more shares cheaply before starting the dividend payout cycle.
+        
+2.  **Investor Confidence (Market Action):** The stock price represents the **market's confidence** in the company.
+    
+    *   **Payout:** When a company pays a dividend, shareholders are rewarded, and market confidence rises (**Stock Price Increases**).
+    *   **Withhold:** When a company holds onto its cash, shareholders receive nothing. The market interprets this as either a sign of poor performance or, more commonly, that the president is prioritizing company growth over shareholder returns. This lack of immediate return erodes confidence (**Stock Price Decreases**).
+        
+3.  **The Tough Choice:** This mechanic forces the company president to weigh two competing interests every Operating Round:
+    
+    *   **Growth (Withhold):** Lowering the stock price (hurting your own net worth) to build up company cash for expensive track upgrades.
+    *   **Profit (Dividend):** Raising the stock price (increasing your net worth) but limiting the company's capital for immediate expansion.
+
+In summary, the price drop for withholding revenue prevents presidents from silently hoarding cash without consequence and ensures that every operating decision has a direct and significant financial impact on the players holding the stock.
+
+

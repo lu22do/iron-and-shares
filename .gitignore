@@ -15,7 +15,8 @@ dist-ssr
 # Environment variables & deployment files
 .env
 .env.local
-.firebase/*
+.firebase/
+.firebaserc
 
 # Editor directories and files
 .vscode/*
